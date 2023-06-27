@@ -1,7 +1,6 @@
 package jm.task.core.jdbc.dao;
 
 import jm.task.core.jdbc.model.User;
-import jm.task.core.jdbc.util.Util;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -13,23 +12,21 @@ public class UserDaoJDBCImpl implements UserDao {
     public UserDaoJDBCImpl() {
 
     }
-    private String sqlCreateTable =  "CREATE TABLE users (\n" +
-            "    id INT PRIMARY KEY auto_increment,\n" +
-            "    name VARCHAR(255) not null,\n" +
-            "    lastName VARCHAR(30),\n" +
+
+    private final String sqlCreateTable = "CREATE TABLE users (" +
+            "    id INT PRIMARY KEY auto_increment, " +
+            "    name VARCHAR(255) not null, " +
+            "    lastName VARCHAR(30), " +
             "    age TINYINT not null )";
-    private String sqlDropTable = "DROP table if exists users";
-    private String sqlSaveUser = "INSERT INTO users (NAME, LASTNAME, AGE) VALUES (?, ?, ?)";
-    private String sqlDeleteById = "DELETE FROM users WHERE id = ?";
-    private String sqlSelectAll = "SELECT * FROM users";
-    private String sqlCleanTable = "DELETE FROM users";
-
-
+    private final String sqlDropTable = "DROP table if exists users";
+    private final String sqlSaveUser = "INSERT INTO users (NAME, LASTNAME, AGE) VALUES (?, ?, ?)";
+    private final String sqlDeleteById = "DELETE FROM users WHERE id = ?";
+    private final String sqlSelectAll = "SELECT * FROM users";
+    private final String sqlCleanTable = "DELETE FROM users";
 
 
     public void createUsersTable() {
-        Connection connection = getConnection();
-        try (connection) {
+        try (Connection connection = getConnection()) {
             connection.setAutoCommit(false);
 
             PreparedStatement preparedStatement = connection.prepareStatement(sqlCreateTable);
@@ -37,28 +34,20 @@ public class UserDaoJDBCImpl implements UserDao {
 
             connection.commit();
         } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
+            e.printStackTrace();
         }
     }
 
     public void dropUsersTable() {
-        Connection connection = getConnection();
-        try (connection) {
+        try (Connection connection = getConnection()) {
+            connection.setAutoCommit(false);
 
             PreparedStatement preparedStatement = connection.prepareStatement(sqlDropTable);
             preparedStatement.executeUpdate();
 
             connection.commit();
         } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
+            e.printStackTrace();
         }
     }
 
@@ -120,7 +109,6 @@ public class UserDaoJDBCImpl implements UserDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println(userList);
         return userList;
     }
 
